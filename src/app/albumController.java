@@ -1,23 +1,26 @@
 package app;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.Optional;
-import java.util.ResourceBundle;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 public class albumController {
 
@@ -48,22 +51,74 @@ public class albumController {
 		userName.setAccessibleText(database.userObj.getName());
 		
 		albums.setOnMouseClicked(event -> {
-		    if (event.getClickCount() == 2) {
-		    	// check if the mouse was double clicked
-		    	try {
-		    		FXMLLoader loader = new FXMLLoader();
-					loader.setLocation(getClass().getResource("photolist.fxml"));
-					Stage mainStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-					AnchorPane root = (AnchorPane)loader.load();
-					mainStage.setScene(new Scene(root));
-					mainStage.show();
-		    	} catch(Exception e)
-		        {
-		        	e.printStackTrace();
-		        }
-		    	
-		    }
+			if(data.size()> 0)
+			{
+				if (event.getClickCount() == 2) {
+			    	// check if the mouse was double clicked
+			    	try 
+			    	{
+			    		selectedIndex = albums.getSelectionModel().getSelectedIndex();
+			    		User.albumName = database.userObj.albums.get(selectedIndex);
+			    		
+			    		FXMLLoader loader = new FXMLLoader();
+						loader.setLocation(getClass().getResource("photolist.fxml"));
+						Stage mainStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+						AnchorPane root = (AnchorPane)loader.load();
+						mainStage.setScene(new Scene(root));
+						mainStage.show();
+			    	} catch(Exception e)
+			        {
+			        	e.printStackTrace();
+			        }
+			    	
+			    }
+			}
 		});
+		
+		albums.setCellFactory(new Callback<ListView<String>, ListCell<String>>()
+        {
+              @Override
+              public ListCell<String> call(ListView<String> listView)
+              {
+                  return new ListCell<String>()
+                  {
+                     
+
+                      @Override
+                      protected void updateItem(String item, boolean empty)
+                      {
+                          super.updateItem(item, empty);
+                          if(empty || item == null)
+                          {
+                              setText(null);
+                              setGraphic(null);
+                          }
+                          else
+                          {
+                              // Load the image from the file path
+                              Image image = new Image("file:/Users/niveshnayee/Desktop/IMG_3411.jpeg");
+                              ImageView imageView = new ImageView();
+                              Label album = new Label(item);
+                              Label date = new Label("03/22/2019 - 05/13/2020");
+                              Label picCount = new Label("0 Photos");
+                              imageView.setFitWidth(150);
+                              imageView.setFitHeight(120);
+                              imageView.setImage(image);
+                              
+                              // Set the image and text in the cell
+                              // setText(item);
+                              
+                              HBox hb = new HBox();
+                              VBox vb = new VBox();
+                              vb.getChildren().addAll(album, date, picCount);
+                              vb.setPadding(new Insets(40, 0, 0, 40));
+                              hb.getChildren().addAll(imageView, vb);
+                              setGraphic(hb);
+                          }
+                      }
+                  };
+              }
+        });
 		
 	}
 
@@ -82,11 +137,8 @@ public class albumController {
     	    
     	    if(name!= "" &&!data.contains(name))
         	{
-        		
-//        		User user = database.getUser(name);
-//        		user.setName(name);
     	    	database.userObj.addAlbum(name);
-        		data.add(name);
+    	    	data.add(name);        		
         	}
     	}
     }
@@ -101,7 +153,9 @@ public class albumController {
     	if(selectedIndex > -1)
     	{
     		selectedIndex = albums.getSelectionModel().getSelectedIndex();
-        	database.userObj.removeAlbum(data.get(selectedIndex));
+        	database.userObj.albums.remove(selectedIndex);
+        	//removeAlbum(data.get(selectedIndex));
+        	
         	data.remove(selectedIndex);
     	}
     }
@@ -109,27 +163,35 @@ public class albumController {
     @FXML
     void edit(ActionEvent event) 
     {
-    	String old = albums.getSelectionModel().getSelectedItem();
-    	TextInputDialog dialog = new TextInputDialog();
-    	dialog.setTitle("Rename");
-    	dialog.setHeaderText("Enter your Album name:");
-    	dialog.setContentText("Name:");
+    	selectedIndex = albums.getSelectionModel().getSelectedIndex();
+    	if(selectedIndex == 0 && data.size() < 0)
+    		selectedIndex = -1;
+    	
+    	if(selectedIndex > -1)
+    	{
+    		String old = albums.getSelectionModel().getSelectedItem();
+        	TextInputDialog dialog = new TextInputDialog();
+        	dialog.setTitle("Rename");
+        	dialog.setHeaderText("Enter your Album name:");
+        	dialog.setContentText("Name:");
 
-//    	final Optional<ButtonType> result = alert.showAndWait();
-    	Optional<String> result = dialog.showAndWait();
-    	if (result.isPresent()){
-    	    String name = result.get();
-    	    
-    	    if(name!= "" &&!data.contains(name))
-        	{
-        		
-//        		User user = database.getUser(name);
-//        		user.setName(name);
-    	    	database.userObj.renameAlbum(old, name);
-    	    	selectedIndex = albums.getSelectionModel().getSelectedIndex();
-        		data.set(selectedIndex, name);
+//        	final Optional<ButtonType> result = alert.showAndWait();
+        	Optional<String> result = dialog.showAndWait();
+        	if (result.isPresent()){
+        	    String name = result.get();
+        	    
+        	    if(name!= "" &&!data.contains(name))
+            	{
+            		
+//            		User user = database.getUser(name);
+//            		user.setName(name);
+        	    	database.userObj.renameAlbum(old, name);
+        	    	selectedIndex = albums.getSelectionModel().getSelectedIndex();
+            		data.set(selectedIndex, name);
+            	}
         	}
     	}
+    	
     }
 
     @FXML

@@ -7,6 +7,7 @@ public class User implements Serializable
 {
 	private static final long serialVersionUID = 2L;
 	public String name;
+	public static album albumName;
 	
 	public ArrayList<album> albums;
 	
