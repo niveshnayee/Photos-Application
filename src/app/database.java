@@ -1,5 +1,6 @@
 package app;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -10,53 +11,127 @@ import java.util.ArrayList;
 
 public class database implements Serializable 
 {
-	 private static ArrayList<User> usersList;
+	private static final long serialVersionUID = 1L;
+	
+	private static database db = null;
+	private static ArrayList<User> usersList;
+	public static User userObj;
+	
+	 private database()
+	 {
+		 usersList = new ArrayList<User>();
+		 User Stock = new User("stock");
+//		 Stock.setName("stock");
+		 usersList.add(Stock);
+	 }
+	 
+	 public static database getInstance() 
+	 {
+		 if (db == null) {
+		 db = new database();
+		 }
+		 return db;
+	 }
+	 
+	 public static ArrayList<User> users()
+	 {
+//		 database d = getInstance();
+////		 System.out.println(d.exists("stock"));
+		 return usersList;
+	 }
 	 
 	 public static void addUser(User user)
 	 {
+		 
+//		 database d = getInstance();
 		 usersList.add(user);
 	 }
 	 
-	 public static User exists(String userName)
+	 
+	 public static void setUser(String name)
 	 {
-        for(User user : usersList){
-            if(user.getName().equalsIgnoreCase(userName)){
-                return user;
+//		 database d = getInstance();
+		 for(User user : usersList)
+		 {
+            if(user.getName().equalsIgnoreCase(name)){
+                userObj = user;
             }
-        }
-        return null;
-    }
-    
-	 public static ArrayList<User> getUsersList()
-	 {
-        return usersList;
+		 }
 	 }
+	 
+	 
+	 
+	 public static boolean exists(String name)
+	 {
+//		 database d = getInstance();
+		 for(User user : usersList)
+		 {
+            if(user.getName().equalsIgnoreCase(name)){
+                return true;
+            }
+		 }
+		 return false;
+	 }
+	 
+	 
+//	 public static void addUser(User user)
+//	 {
+//		 db.usersList.add(user);
+//	 }
+//	 
+//	 public static User exists(String userName)
+//	 {
+//        for(User user : usersList){
+//            if(user.getName().equalsIgnoreCase(userName)){
+//                return user;
+//            }
+//        }
+//        return null;
+//    }
+//    
+//	 public static ArrayList<User> getUsersList()
+//	 {
+//        return usersList;
+//	 }
+	 
 	 
 	 public static void writeToDataBase() throws IOException
 	 {
-        FileOutputStream fileOutputStream = new FileOutputStream("data.dat");
+        FileOutputStream fileOutputStream = new FileOutputStream("src/data.dat");
         ObjectOutputStream outputStream = new ObjectOutputStream(fileOutputStream);
-        outputStream.writeObject(usersList);
+        outputStream.writeObject(db.usersList);
+        outputStream.close();
 	 }
 	 
 	 
-	 public static void readFromDataBase() throws IOException, ClassNotFoundException 
+	@SuppressWarnings("unchecked")
+	public static void readFromDataBase()
 	 {
-        FileInputStream fileInputStream;
-        try{
-            fileInputStream = new FileInputStream("data.dat");
-        } catch (Exception e) {
-            usersList = new ArrayList<>();
-            adminController.start();
-            return;
+		database d = getInstance();
+		File f = new File("src/data.dat");
+        try
+        {
+        	if(f.length() == 0)
+            {
+            	//
+            }
+        	else
+            {
+        		ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f));
+//                database obj = new database();
+                Object o = ois.readObject();
+                if(o instanceof ArrayList<?>)
+                {
+                	 ArrayList<User> currentUserList = (ArrayList<User>) o;
+                     d.usersList = currentUserList;
+                }
+               
+            }
         }
-        ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-        usersList = (ArrayList<User>) objectInputStream.readObject();
-        if(database.exists("stock") == null){
-        	adminController.start();
+        catch(Exception e)
+        {
+        	e.printStackTrace();
         }
-        fileInputStream.close();
-        objectInputStream.close();
-
+        
 	 }
 }

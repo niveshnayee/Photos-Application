@@ -1,5 +1,8 @@
 package app;
 
+
+
+import java.io.FileWriter;
 import java.io.IOException;
 
 //import java.io.FileWriter;
@@ -11,7 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-public class photos extends Application {
+public class Photos extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
@@ -24,9 +27,10 @@ public class photos extends Application {
 			loginController listController = loader.getController();
 			primaryStage.setOnCloseRequest(event -> 
 	    	{
-	    		try {
-					database.writeToDataBase();
-				} catch (IOException e) {
+	    		try
+	    		{
+	    			database.writeToDataBase();
+	    		} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
