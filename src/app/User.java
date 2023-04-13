@@ -1,7 +1,9 @@
 package app;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class User implements Serializable 
 {
@@ -12,11 +14,14 @@ public class User implements Serializable
 	public  ArrayList<Tags> tag;
 	public ArrayList<album> albums;
 	
+	public HashMap<LocalDateTime,String> dateSearch; 
+	
 	public User(String name, ArrayList<album> p)
 	{
 		this.name = name;
 		albums = p;
 		tag = new ArrayList<Tags>();
+		dateSearch = new HashMap<>();
 	}
 	
 	public Tags getTagFromPath(String path)

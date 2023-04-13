@@ -112,6 +112,7 @@ public class photolistController {
     		{
     			if(database.userObj.containsPath(pic.path))
     			{
+    				System.out.println("hi");
     				Tags t = database.userObj.getTagFromPath(pic.path);
     				
     				for (Map.Entry<String, String> entry : t.tags.entrySet()) 
@@ -139,8 +140,7 @@ public class photolistController {
     	picView.setItems(data);
 		picView.requestFocus();
 		
-		tags.setItems(tagData);
-		tags.requestFocus();
+		
 		
     	picView.setCellFactory(new Callback<ListView<String>, ListCell<String>>()
         {
@@ -192,6 +192,23 @@ public class photolistController {
 				caption.setText(photo.caption);
 				photoDate.setText(photo.dateNTime);
 				
+				if(database.userObj.containsPath(data.get(selectedIndex)))
+    			{
+					tags.setItems(tagData);
+					tags.requestFocus();
+					
+    				Tags t = database.userObj.getTagFromPath(data.get(selectedIndex));
+    				
+    				for (Map.Entry<String, String> entry : t.tags.entrySet()) 
+    				{
+    				    String key = entry.getKey();
+    				    String value = entry.getValue();
+    				    String keyValueString = key + ": " + value;
+    				    if(!tagData.contains(keyValueString))
+    				    	tagData.add(keyValueString);
+    				}
+    			}else
+    				tagData.clear();
 				
             }else
             {
@@ -230,6 +247,9 @@ public class photolistController {
 //        	selectedIndex = picView.getSelectionModel().getSelectedIndex();
 //    		photoList photo = User.albumName.photos.get(selectedIndex);
 			LocalDateTime currentDateTime = LocalDateTime.now();
+			if(database.userObj.dateSearch == null)
+				database.userObj.dateSearch = new HashMap<>();
+			database.userObj.dateSearch.put(currentDateTime, file.getPath());
 			if(User.albumName.oldDate == null || currentDateTime.isBefore(User.albumName.oldDate))
 			{
 				User.albumName.oldDate = currentDateTime;
@@ -277,11 +297,26 @@ public class photolistController {
     		//Tags t = database.userObj.getTagFromPath(data.get(selectedIndex));
     		//System.out.println("hi");
     		database.userObj.tag.add(new Tags(pair, path));
-    		String tagFormatted = categoryDrag.getSelectionModel().getSelectedItem() + ": " + catValue.getText();
-    		tagData.add(tagFormatted);
+//    		String tagFormatted = categoryDrag.getSelectionModel().getSelectedItem() + ": " + catValue.getText();
+//    		tagData.add(tagFormatted);
     		
     		catValue.clear();
+    		//categoryDrag.clearSelection();
+    	}else
+    	{
+    		for(Tags t : database.userObj.tag)
+			{
+				if(t.photoPath.contains(data.get(selectedIndex)))
+				{
+					t.tags.put(c, catValue.getText());
+					    picView.fireEvent(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0,
+		            	        0, 0, 0, MouseButton.PRIMARY, 1, true, true, true, true,
+		            	        true, true, true, true, true, true, null));
+					    return ;
+				}
+			}	    
     	}
+    	
     	
     	picView.fireEvent(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0,
     	        0, 0, 0, MouseButton.PRIMARY, 1, true, true, true, true,
@@ -316,6 +351,9 @@ public class photolistController {
     			if(!alb.photos.contains(User.albumName.photos.get(selectedIndex)))
     				alb.photos.add(User.albumName.photos.get(selectedIndex));
     		}
+    		
+    		alb.oldDate = User.albumName.oldDate;
+    		alb.newDate = User.albumName.newDate;
     	}
     	
     }
@@ -339,7 +377,7 @@ public class photolistController {
     	
     	if(alb != null && selectedIndex != -1)
     	{
-    		System.out.println("in");
+//    		System.out.println("in");
     		if(alb.photos.size() == 0) 
     		{
     			
@@ -356,6 +394,9 @@ public class photolistController {
     				data.remove(selectedIndex);
     			}	
     		}
+    		
+    		alb.oldDate = User.albumName.oldDate;
+    		alb.newDate = User.albumName.newDate;
     		
     		picView.fireEvent(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0,
         	        0, 0, 0, MouseButton.PRIMARY, 1, true, true, true, true,
@@ -449,7 +490,37 @@ public class photolistController {
     @FXML
     void removeTag(ActionEvent event) 
     {
+    	selectedIndex = picView.getSelectionModel().getSelectedIndex();
+    	if(selectedIndex == 0 && data.size() < 0)
+    		selectedIndex = -1;
     	
+    	if(selectedIndex > -1)
+    	{
+    		if(tagData.size() > 0)
+    		{
+    			int tagIndex = tags.getSelectionModel().getSelectedIndex();
+    			
+    			for(Tags t : database.userObj.tag)
+    			{
+    				if(t.photoPath.contains(data.get(selectedIndex)))
+    				{
+    					String k = tagData.get(tagIndex).substring(0, 4);
+    					String v = tagData.get(tagIndex).substring(6);
+    					
+    					if (t.tags.containsKey(k) && t.tags.get(k).equals(v)) {
+    					    t.tags.remove(k);
+    					    if(t.tags.size() == 0)
+    					    	t.photoPath.remove(data.get(selectedIndex));
+    					    picView.fireEvent(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0,
+    		            	        0, 0, 0, MouseButton.PRIMARY, 1, true, true, true, true,
+    		            	        true, true, true, true, true, true, null));
+    					    return ;
+    					}	    
+    				}
+    			}
+    		}
+        	
+    	}
     }
 
     @FXML
