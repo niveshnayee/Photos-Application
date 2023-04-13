@@ -138,6 +138,7 @@ public class database implements Serializable
                 	 ArrayList<User> currentUserList = (ArrayList<User>) o;
                      d.usersList = currentUserList;
                 }
+                ois.close();
                
             }
         }

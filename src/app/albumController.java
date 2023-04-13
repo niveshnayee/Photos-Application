@@ -109,7 +109,7 @@ public class albumController {
                         		  image = new Image("file:" + path);
                         	  }
                         	  else
-                        		  image = new Image("file:/Users/niveshnayee/Desktop/IMG_3411.jpeg");
+                        		  image = new Image("file:/Users/niveshnayee/Desktop/No-Image-Found-400x264.png");
                               ImageView imageView = new ImageView();
                               Label album = new Label(item);
                               

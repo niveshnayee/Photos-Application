@@ -9,12 +9,55 @@ public class User implements Serializable
 	public String name;
 	public static album albumName;
 	
+	public  ArrayList<Tags> tag;
 	public ArrayList<album> albums;
 	
 	public User(String name, ArrayList<album> p)
 	{
 		this.name = name;
 		albums = p;
+		tag = new ArrayList<Tags>();
+	}
+	
+	public Tags getTagFromPath(String path)
+	{
+		for(Tags t : tag)
+		{
+			if(t.photoPath.contains(path))
+				return t;
+		}
+		return null;
+	}
+	
+	public boolean containsCat(String name)
+	{
+		for(Tags t : tag)
+		{
+			if(t.tags.containsKey(name))
+				return true;
+		}
+		return false;
+	}
+	
+	public boolean containsVal(String name)
+	{
+		for(Tags t : tag)
+		{
+			if(t.tags.containsValue(name))
+				return true;
+		}
+		return false;
+	}
+	
+	
+	public boolean containsPath(String name)
+	{
+		for(Tags t : tag)
+		{
+			if(t.photoPath.contains(name))
+				return true;
+		}
+		return false;
 	}
 	
 	

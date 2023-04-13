@@ -6,7 +6,8 @@ import java.net.MalformedURLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import javafx.collections.FXCollections;
@@ -57,7 +58,7 @@ public class photolistController {
     private Button category;
 
     @FXML
-    private ChoiceBox<?> categoryDrag;
+    private ChoiceBox<String> categoryDrag;
 
     @FXML
     private ChoiceBox<album> copyDrag;
@@ -73,7 +74,8 @@ public class photolistController {
     private ObservableList<String> data = FXCollections.observableArrayList();
 
     @FXML
-    private ListView<?> tags;
+    private ListView<String> tags;
+    private ObservableList<String> tagData = FXCollections.observableArrayList();
     
 //    public static String oldDate = "00-00-0000", newDate = "99-99-9999";
     //public static LocalDateTime oldestDate = null, newestDate = null;
@@ -86,6 +88,14 @@ public class photolistController {
     	
     	copyDrag.getItems().addAll(database.userObj.albums);
     	moveDrag.getItems().addAll(database.userObj.albums);
+    	categoryDrag.getItems().add("Place");
+    	categoryDrag.getItems().add("Person");
+    	if(database.userObj.tag == null)
+    		database.userObj.tag = new ArrayList<>();
+    	for(Tags t: database.userObj.tag)
+    	{
+    		categoryDrag.getItems().addAll(t.tags.keySet());
+    	}
     	
     	if(User.albumName.photos != null) 
     	{
@@ -95,8 +105,42 @@ public class photolistController {
     		}
     	}
     	
+    	
+    	if(User.albumName.photos != null) 
+    	{
+    		for(photoList pic : User.albumName.photos)
+    		{
+    			if(database.userObj.containsPath(pic.path))
+    			{
+    				Tags t = database.userObj.getTagFromPath(pic.path);
+    				
+    				for (Map.Entry<String, String> entry : t.tags.entrySet()) 
+    				{
+    				    String key = entry.getKey();
+    				    String value = entry.getValue();
+    				    String keyValueString = key + ": " + value;
+    				    tagData.add(keyValueString);
+    				}
+    			}
+    		}
+    	}
+//    	if(database.userObj.containsPath(data.get(selectedIndex)))
+//		{
+//			Tags t = database.userObj.getTagFromPath(data.get(selectedIndex));
+//			
+//			for (Map.Entry<String, String> entry : t.tags.entrySet()) {
+//			    String key = entry.getKey();
+//			    String value = entry.getValue();
+//			    String keyValueString = key + ": " + value;
+//			    tagData.add(keyValueString);
+//			}
+//		}
+    	
     	picView.setItems(data);
 		picView.requestFocus();
+		
+		tags.setItems(tagData);
+		tags.requestFocus();
 		
     	picView.setCellFactory(new Callback<ListView<String>, ListCell<String>>()
         {
@@ -218,7 +262,30 @@ public class photolistController {
     @FXML
     void addTag(ActionEvent event) 
     {
+    	// need to check if user put nothing in value and cat selection box 
+    	HashMap<String, String> pair = new HashMap<>();
     	
+    	selectedIndex = picView.getSelectionModel().getSelectedIndex();
+    	String c = categoryDrag.getSelectionModel().getSelectedItem();
+    	pair.put(c, catValue.getText());
+    	
+    	
+    	ArrayList<String> path = new ArrayList<>();
+    	path.add(data.get(selectedIndex));
+    	if(!database.userObj.containsPath(data.get(selectedIndex)))
+    	{
+    		//Tags t = database.userObj.getTagFromPath(data.get(selectedIndex));
+    		//System.out.println("hi");
+    		database.userObj.tag.add(new Tags(pair, path));
+    		String tagFormatted = categoryDrag.getSelectionModel().getSelectedItem() + ": " + catValue.getText();
+    		tagData.add(tagFormatted);
+    		
+    		catValue.clear();
+    	}
+    	
+    	picView.fireEvent(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0,
+    	        0, 0, 0, MouseButton.PRIMARY, 1, true, true, true, true,
+    	        true, true, true, true, true, true, null));
     }
 
     @FXML
@@ -361,6 +428,23 @@ public class photolistController {
         	
     	}
     }
+    
+    @FXML
+    void addCategory(ActionEvent event) 
+    {
+    	TextInputDialog dialog = new TextInputDialog();
+    	dialog.setTitle("Re-Caption");
+    	dialog.setHeaderText("Enter your Caption:");
+    	dialog.setContentText("Caption:");
+
+//    	final Optional<ButtonType> result = alert.showAndWait();
+    	Optional<String> result = dialog.showAndWait();
+    	if (result.isPresent() && result.get() != "")
+    	{
+    		categoryDrag.getItems().add(result.get());
+    	}
+    }
+    
 
     @FXML
     void removeTag(ActionEvent event) 

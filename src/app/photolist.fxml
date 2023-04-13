@@ -35,7 +35,7 @@
       <TextField fx:id="catValue" layoutX="521.0" layoutY="641.0" prefHeight="26.0" prefWidth="132.0" />
       <Button layoutX="587.0" layoutY="674.0" mnemonicParsing="false" onAction="#addTag" style="-fx-background-color: #516cb5;" text="Add Tag" textFill="#f5efef" />
       <Label layoutX="445.0" layoutY="645.0" text="Enter value :" />
-      <Button fx:id="category" layoutX="429.0" layoutY="609.0" mnemonicParsing="false" style="-fx-background-color: #516cb5;" text="Add Category" textFill="#f5efef" />
+      <Button fx:id="category" layoutX="429.0" layoutY="609.0" mnemonicParsing="false" onAction="#addCategory" style="-fx-background-color: #516cb5;" text="Add Category" textFill="#f5efef" />
       <Button layoutX="148.0" layoutY="715.0" mnemonicParsing="false" onAction="#slideShow" style="-fx-background-color: #516cb5;" text="SlideShow" textFill="#f5efef" />
       <ListView fx:id="tags" layoutX="449.0" layoutY="446.0" prefHeight="100.0" prefWidth="200.0" />
       <Label layoutX="409.0" layoutY="368.0" text="Caption :" />
