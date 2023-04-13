@@ -20,7 +20,7 @@ public class database implements Serializable
 	 private database()
 	 {
 		 usersList = new ArrayList<User>();
-		 User Stock = new User("stock");
+		 User Stock = new User("stock", new ArrayList<album>());
 //		 Stock.setName("stock");
 		 usersList.add(Stock);
 	 }
@@ -38,6 +38,19 @@ public class database implements Serializable
 //		 database d = getInstance();
 ////		 System.out.println(d.exists("stock"));
 		 return usersList;
+	 }
+	 
+	 public static void removeUser(String name)
+	 {
+		 for(User user : usersList)
+		 {
+            if(user.getName().equalsIgnoreCase(name))
+            {
+            	usersList.remove(usersList.indexOf(user));
+            	return;
+            }
+		 }
+		 
 	 }
 	 
 	 public static void addUser(User user)

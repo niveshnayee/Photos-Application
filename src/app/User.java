@@ -11,18 +11,32 @@ public class User implements Serializable
 	
 	public ArrayList<album> albums;
 	
-	public User(String name)
+	public User(String name, ArrayList<album> p)
 	{
 		this.name = name;
-		this.albums = new ArrayList<album>();
+		albums = p;
 	}
+	
+	
+	public album getAlbum(String name)
+	{
+		for(album alb : albums)
+		{
+			if(alb.name == name)
+			{
+				return alb;
+			}
+		}
+		return null;
+	}
+	
 	
 	public void addAlbum(String name)
 	{
-		if (albums == null) {
-	        albums = new ArrayList<album>();
-	    }
-		album alb = new album(name);
+//		if (albums == null) {
+//	        albums = new ArrayList<album>();
+//	    }
+		album alb = new album(name, new ArrayList<photoList>());
 		albums.add(alb);
 	}
 	
@@ -54,6 +68,8 @@ public class User implements Serializable
 	{
 		return name;
 	}
+	
+	
 	
 	public void setName(String name){ this.name = name;}
 }

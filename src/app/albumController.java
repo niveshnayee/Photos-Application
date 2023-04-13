@@ -1,6 +1,7 @@
 package app;
 
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -28,7 +29,7 @@ public class albumController {
     private ListView<String> albums;
 
     @FXML
-    public static Label userName = new Label();
+    public Label userName;
     
     private ObservableList<String> data = FXCollections.observableArrayList();
     
@@ -46,6 +47,8 @@ public class albumController {
     			data.add(alb.name);
     		}
     	}
+    	
+    	userName.setText(database.userObj.name);
     	albums.setItems(data);
 		albums.requestFocus();
 		userName.setAccessibleText(database.userObj.getName());
@@ -58,7 +61,7 @@ public class albumController {
 			    	try 
 			    	{
 			    		selectedIndex = albums.getSelectionModel().getSelectedIndex();
-			    		User.albumName = database.userObj.albums.get(selectedIndex);
+			    		User.albumName = database.userObj.albums.get(selectedIndex); //checks which album opened
 			    		
 			    		FXMLLoader loader = new FXMLLoader();
 						loader.setLocation(getClass().getResource("photolist.fxml"));
@@ -87,6 +90,8 @@ public class albumController {
                       @Override
                       protected void updateItem(String item, boolean empty)
                       {
+                    	  Label date;
+                    	  Image image;
                           super.updateItem(item, empty);
                           if(empty || item == null)
                           {
@@ -96,11 +101,41 @@ public class albumController {
                           else
                           {
                               // Load the image from the file path
-                              Image image = new Image("file:/Users/niveshnayee/Desktop/IMG_3411.jpeg");
+                        	  int size = database.userObj.getAlbum(item).photos.size();
+                        	  
+                        	  if(size != 0)
+                        	  {
+                        		  String path = database.userObj.getAlbum(item).photos.get(size-1).path;
+                        		  image = new Image("file:" + path);
+                        	  }
+                        	  else
+                        		  image = new Image("file:/Users/niveshnayee/Desktop/IMG_3411.jpeg");
                               ImageView imageView = new ImageView();
                               Label album = new Label(item);
-                              Label date = new Label("03/22/2019 - 05/13/2020");
-                              Label picCount = new Label("0 Photos");
+                              
+                              if( database.userObj.getAlbum(item).oldDate != null)
+                              {
+                            	  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+                                  String formattedDateTime = database.userObj.getAlbum(item).oldDate.format(formatter);
+                                  
+                                  if(database.userObj.getAlbum(item).newDate != null)
+                                  {
+                                      String formattedDateTime2 = database.userObj.getAlbum(item).newDate.format(formatter);
+                                      date = new Label(formattedDateTime + " - " + formattedDateTime2);
+                                  }
+                                  else
+                                  {
+                                	  date = new Label(formattedDateTime + " - " + formattedDateTime);
+                                  }
+                                  
+                              }
+                              else
+                              {
+                            	  date = new Label( "N/A" );
+                              }
+
+                              Label picCount = new Label(Integer.toString(size) + " Photos");
+                              //Label picCount = new Label(Integer.toString(User.albumName.photos.size()));
                               imageView.setFitWidth(150);
                               imageView.setFitHeight(120);
                               imageView.setImage(image);

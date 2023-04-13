@@ -3,6 +3,7 @@ package app;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
@@ -48,7 +49,7 @@ public class adminController implements Initializable {
     	if(name!= "" &&!data.contains(name))
     	{
     		
-    		User user = new User(name);
+    		User user = new User(name, new ArrayList<album>());
 //    		user.setName(name);
     		database.addUser(user);
     		data.add(name);
@@ -60,8 +61,21 @@ public class adminController implements Initializable {
     @FXML
     void delete(ActionEvent event) 
     {
+    	
     	selectedIndex = userList.getSelectionModel().getSelectedIndex();
-        userList.getItems().remove(selectedIndex);
+    	if(selectedIndex == 0 && data.size() < 0)
+    		selectedIndex = -1;
+    	
+    	if(selectedIndex > -1)
+    	{
+    		selectedIndex = userList.getSelectionModel().getSelectedIndex();
+        	
+    		
+    		database.removeUser(data.get(selectedIndex));
+        	//removeAlbum(data.get(selectedIndex));
+        	
+        	data.remove(selectedIndex);
+    	}
         
     }
 

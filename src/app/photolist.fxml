@@ -43,7 +43,7 @@
       <Label layoutX="410.0" layoutY="446.0" text="Tags :" />
       <Button layoutX="562.0" layoutY="553.0" mnemonicParsing="false" onAction="#removeTag" style="-fx-background-color: #516cb5;" text="Remove Tag" textFill="#f5efef" />
       <ChoiceBox fx:id="moveDrag" layoutX="365.0" layoutY="161.0" prefWidth="150.0" />
-      <Label fx:id="caption" layoutX="461.0" layoutY="368.0" />
-      <Label fx:id="photoDate" layoutX="489.0" layoutY="406.0" />
+      <Label fx:id="caption" layoutX="461.0" layoutY="368.0" prefHeight="17.0" prefWidth="194.0" />
+      <Label fx:id="photoDate" layoutX="489.0" layoutY="406.0" prefHeight="17.0" prefWidth="178.0" />
    </children>
 </AnchorPane>
