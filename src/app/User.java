@@ -1,6 +1,7 @@
 package app;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,7 +15,7 @@ public class User implements Serializable
 	public  ArrayList<Tags> tag;
 	public ArrayList<album> albums;
 	
-	public HashMap<LocalDateTime,String> dateSearch; 
+	public HashMap<LocalDate,String> dateSearch; 
 	
 	public User(String name, ArrayList<album> p)
 	{

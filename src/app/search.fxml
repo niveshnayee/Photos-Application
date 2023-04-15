@@ -4,13 +4,11 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="770.0" prefWidth="730.0" style="-fx-background-color: #fffdfd;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="770.0" prefWidth="730.0" style="-fx-background-color: #fffdfd;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.SearchController">
    <children>
-      <Button layoutX="258.0" layoutY="686.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="214.0" style="-fx-background-color: #516cb5;" text="Create Album of Search results" textFill="#fffdfd" />
-      <Button layoutX="21.0" layoutY="14.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="56.0" style="-fx-background-color: #516cb5;" text="Back" textFill="#f8f3f3" />
-      <ListView layoutX="23.0" layoutY="100.0" prefHeight="571.0" prefWidth="684.0" />
-      <Button layoutX="649.0" layoutY="14.0" mnemonicParsing="false" style="-fx-background-color: #516cb5;" text="Logout" textFill="#f8f3f3" />
-      <Button layoutX="87.0" layoutY="64.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="171.0" style="-fx-background-color: #516cb5;" text="Search By Tags" textFill="#fffdfd" />
-      <Button layoutX="472.0" layoutY="64.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="171.0" style="-fx-background-color: #516cb5;" text="Search by Date " textFill="#fffdfd" />
+      <Button layoutX="264.0" layoutY="666.0" mnemonicParsing="false" onAction="#createAlbum" prefHeight="26.0" prefWidth="214.0" style="-fx-background-color: #516cb5;" text="Create Album of Search results" textFill="#fffdfd" />
+      <Button layoutX="21.0" layoutY="14.0" mnemonicParsing="false" onAction="#back" prefHeight="26.0" prefWidth="56.0" style="-fx-background-color: #516cb5;" text="Back" textFill="#f8f3f3" />
+      <ListView fx:id="photoList" layoutX="23.0" layoutY="61.0" prefHeight="571.0" prefWidth="684.0" />
+      <Button layoutX="649.0" layoutY="14.0" mnemonicParsing="false" onAction="#logout" style="-fx-background-color: #516cb5;" text="Logout" textFill="#f8f3f3" />
    </children>
 </AnchorPane>

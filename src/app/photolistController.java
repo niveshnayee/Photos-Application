@@ -3,6 +3,7 @@ package app;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -80,7 +81,7 @@ public class photolistController {
 //    public static String oldDate = "00-00-0000", newDate = "99-99-9999";
     //public static LocalDateTime oldestDate = null, newestDate = null;
     
-    
+    public static photoList picShow;
     private int selectedIndex = -1;
     
     public void initialize() throws MalformedURLException {
@@ -88,13 +89,19 @@ public class photolistController {
     	
     	copyDrag.getItems().addAll(database.userObj.albums);
     	moveDrag.getItems().addAll(database.userObj.albums);
-    	categoryDrag.getItems().add("Place");
-    	categoryDrag.getItems().add("Person");
+    	
+    	
+    	
     	if(database.userObj.tag == null)
     		database.userObj.tag = new ArrayList<>();
+    	categoryDrag.getItems().addAll("Person", "Place");
     	for(Tags t: database.userObj.tag)
     	{
-    		categoryDrag.getItems().addAll(t.tags.keySet());
+    		for (String cat : t.tags.keySet()) 
+			{
+			    if(!cat.equals("Place") && !cat.equals("Person"))
+			    	categoryDrag.getItems().add(cat);
+			}
     	}
     	
     	if(User.albumName.photos != null) 
@@ -194,6 +201,7 @@ public class photolistController {
 				
 				if(database.userObj.containsPath(data.get(selectedIndex)))
     			{
+					tagData.clear();
 					tags.setItems(tagData);
 					tags.requestFocus();
 					
@@ -247,23 +255,38 @@ public class photolistController {
 //        	selectedIndex = picView.getSelectionModel().getSelectedIndex();
 //    		photoList photo = User.albumName.photos.get(selectedIndex);
 			LocalDateTime currentDateTime = LocalDateTime.now();
+			
 			if(database.userObj.dateSearch == null)
 				database.userObj.dateSearch = new HashMap<>();
-			database.userObj.dateSearch.put(currentDateTime, file.getPath());
-			if(User.albumName.oldDate == null || currentDateTime.isBefore(User.albumName.oldDate))
+			
+			LocalDate currDate = LocalDate.now();
+			if(User.albumName.old == null || currDate.isBefore(User.albumName.old))
 			{
-				User.albumName.oldDate = currentDateTime;
+				User.albumName.old = currDate;
 			}
 			
-			if(User.albumName.newDate == null || currentDateTime.isAfter(User.albumName.newDate))
+			if(User.albumName.latest == null || currDate.isAfter(User.albumName.latest))
 			{
-				User.albumName.newDate = currentDateTime;
+				User.albumName.latest = currDate;
 			}
+			
+			
+			
+//			if(User.albumName.oldDate == null || currentDateTime.isBefore(User.albumName.oldDate))
+//			{
+//				User.albumName.oldDate = currentDateTime;
+//			}
+//			
+//			if(User.albumName.newDate == null || currentDateTime.isAfter(User.albumName.newDate))
+//			{
+//				User.albumName.newDate = currentDateTime;
+//			}
             
             // Format the date and time
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm");
             String formattedDateTime = currentDateTime.format(formatter);
             
+            database.userObj.dateSearch.put(currDate, file.getPath());
 //            if(Integer.parseInt(formattedDateTime.substring(6)) > Integer.parseInt(oldDate.substring(6)))
 //            {
 //            	
@@ -292,6 +315,7 @@ public class photolistController {
     	
     	ArrayList<String> path = new ArrayList<>();
     	path.add(data.get(selectedIndex));
+    	
     	if(!database.userObj.containsPath(data.get(selectedIndex)))
     	{
     		//Tags t = database.userObj.getTagFromPath(data.get(selectedIndex));
@@ -352,8 +376,8 @@ public class photolistController {
     				alb.photos.add(User.albumName.photos.get(selectedIndex));
     		}
     		
-    		alb.oldDate = User.albumName.oldDate;
-    		alb.newDate = User.albumName.newDate;
+    		alb.old = User.albumName.old;
+    		alb.latest = User.albumName.latest;
     	}
     	
     }
@@ -395,8 +419,8 @@ public class photolistController {
     			}	
     		}
     		
-    		alb.oldDate = User.albumName.oldDate;
-    		alb.newDate = User.albumName.newDate;
+    		alb.old = User.albumName.old;
+    		alb.latest = User.albumName.latest;
     		
     		picView.fireEvent(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0,
         	        0, 0, 0, MouseButton.PRIMARY, 1, true, true, true, true,
@@ -422,19 +446,28 @@ public class photolistController {
         	    selectedIndex = picView.getSelectionModel().getSelectedIndex();
         	    LocalDateTime currentDateTime = LocalDateTime.now();
         	    
-        	    if(User.albumName.oldDate == null || currentDateTime.isBefore(User.albumName.oldDate))
+        	    
+    			
+    			if(database.userObj.dateSearch == null)
+    				database.userObj.dateSearch = new HashMap<>();
+    			
+    			LocalDate currDate = LocalDate.now();
+    			if(User.albumName.old == null || currDate.isBefore(User.albumName.old))
     			{
-        	    	User.albumName.oldDate = currentDateTime;
+    				User.albumName.old = currDate;
     			}
     			
-    			if(User.albumName.newDate == null || currentDateTime.isAfter(User.albumName.newDate))
+    			if(User.albumName.latest == null || currDate.isAfter(User.albumName.latest))
     			{
-    				User.albumName.newDate = currentDateTime;
+    				User.albumName.latest = currDate;
     			}
                 
+    			
                 // Format the date and time
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm");
                 String formattedDateTime = currentDateTime.format(formatter);
+                
+//                
                 
         	    User.albumName.photos.get(selectedIndex).caption = result.get();
         	    User.albumName.photos.get(selectedIndex).dateNTime = formattedDateTime;
@@ -474,9 +507,9 @@ public class photolistController {
     void addCategory(ActionEvent event) 
     {
     	TextInputDialog dialog = new TextInputDialog();
-    	dialog.setTitle("Re-Caption");
-    	dialog.setHeaderText("Enter your Caption:");
-    	dialog.setContentText("Caption:");
+    	dialog.setTitle("Category");
+    	dialog.setHeaderText("Enter your category:");
+    	dialog.setContentText("Category:");
 
 //    	final Optional<ButtonType> result = alert.showAndWait();
     	Optional<String> result = dialog.showAndWait();
@@ -504,8 +537,9 @@ public class photolistController {
     			{
     				if(t.photoPath.contains(data.get(selectedIndex)))
     				{
-    					String k = tagData.get(tagIndex).substring(0, 4);
-    					String v = tagData.get(tagIndex).substring(6);
+    					String[] parts = tagData.get(tagIndex).split(": ");
+    					String k = parts[0];
+    					String v = parts[1];
     					
     					if (t.tags.containsKey(k) && t.tags.get(k).equals(v)) {
     					    t.tags.remove(k);
@@ -526,6 +560,9 @@ public class photolistController {
     @FXML
     void slideShow(ActionEvent event) throws IOException 
     {
+    	selectedIndex = picView.getSelectionModel().getSelectedIndex();
+    	picShow = User.albumName.photos.get(selectedIndex);
+    	
     	FXMLLoader loader = new FXMLLoader();
 		loader.setLocation(getClass().getResource("slideshow.fxml"));
 		Stage mainStage = (Stage) ((Node) event.getSource()).getScene().getWindow();

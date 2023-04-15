@@ -1,19 +1,32 @@
 package app;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
+
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -34,6 +47,8 @@ public class albumController {
     private ObservableList<String> data = FXCollections.observableArrayList();
     
     private int selectedIndex = -1;
+    
+    
     
     
     
@@ -113,14 +128,14 @@ public class albumController {
                               ImageView imageView = new ImageView();
                               Label album = new Label(item);
                               
-                              if( database.userObj.getAlbum(item).oldDate != null)
+                              if( database.userObj.getAlbum(item).old != null)
                               {
                             	  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
-                                  String formattedDateTime = database.userObj.getAlbum(item).oldDate.format(formatter);
+                                  String formattedDateTime = database.userObj.getAlbum(item).old.format(formatter);
                                   
-                                  if(database.userObj.getAlbum(item).newDate != null)
+                                  if(database.userObj.getAlbum(item).latest != null)
                                   {
-                                      String formattedDateTime2 = database.userObj.getAlbum(item).newDate.format(formatter);
+                                      String formattedDateTime2 = database.userObj.getAlbum(item).latest.format(formatter);
                                       date = new Label(formattedDateTime + " - " + formattedDateTime2);
                                   }
                                   else
@@ -243,12 +258,189 @@ public class albumController {
     @FXML
     void searchDate(ActionEvent event) 
     {
+       	// Create the second popup window
+        Stage popup2 = new Stage();
+        popup2.setTitle("Searching");
+        popup2.setResizable(false);
+
+        
+        Label fromDateLabel = new Label("From Date:");
+        DatePicker fromDatePicker = new DatePicker();
+
+        Label toDateLabel = new Label("To Date:");
+        DatePicker toDatePicker = new DatePicker();
+
+        Button searchButton = new Button("Search");
+
+        // Create an EventHandler for the search button to handle the action event
+        searchButton.setOnAction(e -> {
+
+                LocalDate fromDate = fromDatePicker.getValue();
+                
+                
+                SearchController.fromD = fromDate;
+                
+                LocalDate toDate = toDatePicker.getValue();
+                
+                SearchController.toD = toDate;
+
+                
+                if (toDate.isBefore(fromDate)) {
+                    // Show a warning popup if the "to date" is before the "from date"
+                    Alert alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Warning");
+                    alert.setContentText("To date cannot be before from date");
+                    alert.showAndWait();
+                } else {
+                    // Perform the search if the "to date" is not before the "from date"
+                	try {
+                		FXMLLoader loader = new FXMLLoader();
+                        loader.setLocation(getClass().getResource("search.fxml"));
+                        AnchorPane root = (AnchorPane) loader.load();
+                        Scene scene = new Scene(root);
+                        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                        currentStage.setScene(scene);
+                        currentStage.show();
+                	} catch (Exception e1) {
+                	    e1.printStackTrace();
+                	}
+                	popup2.close();
+                }
+            //}
+        });
+
+        // Create a VBox layout to hold the UI elements for the second popup
+        VBox vbox2 = new VBox(10);
+        vbox2.setPadding(new Insets(10));
+        vbox2.getChildren().addAll(fromDateLabel, fromDatePicker, toDateLabel, toDatePicker, searchButton);
+
+        
+
+        // Set the VBox as the root node of the second popup window
+        Scene scene2 = new Scene(vbox2);
+        popup2.setScene(scene2);
+
+        // Show the second popup window
+        popup2.showAndWait();
+
+      
     	
-    }
+      }
+    
+    
+    
+
 
     @FXML
-    void searchTag(ActionEvent event) {
+    void searchTag(ActionEvent event) throws IOException 
+    {
+    	// Create the UI elements for the popup
+    	// Create the popup window
+        Stage popup = new Stage();
+        popup.setTitle("Search by tag");
+        popup.setResizable(false);
+        
+        ChoiceBox<String> category1 = new ChoiceBox<>();
+        category1.getItems().addAll("Person", "Place");
+        for(Tags t: database.userObj.tag)
+    	{
+    		for (String cat : t.tags.keySet()) 
+			{
+			    if(!cat.equals("Place") && !cat.equals("Person"))
+			    	category1.getItems().add(cat);
+			}
+    	}
+        category1.setValue("Select Category");
+        
+        TextField value1 = new TextField();
+        value1.setPromptText("Enter the value");
 
+        
+        ChoiceBox<String> AndOr = new ChoiceBox<>();
+        AndOr.getItems().addAll("AND", "OR", "N/A");
+        AndOr.setValue("Conjunctive/Disjunctive");
+
+        
+       
+        ChoiceBox<String> category2 = new ChoiceBox<>();
+        category2.getItems().addAll("Person", "Place");
+        for(Tags t: database.userObj.tag)
+    	{
+    		for (String cat : t.tags.keySet()) 
+			{
+			    if(!cat.equals("Place") && !cat.equals("Person"))
+			    	category2.getItems().add(cat);
+			}
+    	}
+        
+        TextField value2 = new TextField();
+        value2.setPromptText("Enter the value");
+
+        Button button = new Button("Submit");
+
+        // Create an EventHandler for the button to handle the action event
+        button.setOnAction(e ->{
+//            @Override
+//            
+//            @FXML
+//            public void handle(ActionEvent event) {
+               
+            	try
+            	{
+            		SearchController.cat1 = category1.getSelectionModel().getSelectedItem();
+            		SearchController.val1 = value1.getText();
+            		
+            		SearchController.opt = AndOr.getSelectionModel().getSelectedItem();
+            		
+            		SearchController.cat2 = category2.getSelectionModel().getSelectedItem();
+            		SearchController.val2 = value2.getText();
+            		
+            		FXMLLoader loader = new FXMLLoader();
+            		loader.setLocation(getClass().getResource("search.fxml"));
+            		Stage mainStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            		AnchorPane root = (AnchorPane)loader.load();
+            		mainStage.setScene(new Scene(root));
+            		mainStage.show();
+            	}catch(Exception e1)
+		        {
+		        	e1.printStackTrace();
+		        }
+            	popup.close();
+            //}
+        });
+
+        // Create an anonymous ChangeListener for the second ChoiceBox to show or hide the second text field
+        AndOr.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (newValue.equals("AND") || newValue.equals("OR")) {
+                    value2.setVisible(true);
+                    category2.setVisible(true);
+                } else {
+                	value2.setVisible(false);
+                	category2.setVisible(false);
+                }
+            }
+        });
+
+        // Hide the second text field by default
+        value2.setVisible(false);
+        category2.setVisible(false);
+
+        // Create a VBox layout to hold the UI elements
+        VBox vbox = new VBox(10);
+        vbox.setPadding(new Insets(10));
+        vbox.getChildren().addAll( category1,value1, AndOr, category2,value2, button);
+
+        
+
+        // Set the VBox as the root node of the popup window
+        Scene scene = new Scene(vbox);
+        popup.setScene(scene);
+
+        // Show the popup window
+        popup.show();
+    	
+    	
     }
 
 }
