@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="738.0" prefWidth="663.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.slideshowController">
+   <children>
+      <ImageView fx:id="bigimage" fitHeight="540.0" fitWidth="420.0" layoutX="113.0" layoutY="99.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="99.0" AnchorPane.leftAnchor="113.0" AnchorPane.rightAnchor="130.0" AnchorPane.topAnchor="99.0">
+         <image>
+            <Image url="@../../../../../Desktop/images.png" />
+         </image>
+      </ImageView>
+      <Button fx:id="left" layoutX="19.0" layoutY="359.0" mnemonicParsing="false" onAction="#movel" prefHeight="64.0" prefWidth="71.0" style="-fx-background-color: #516cb5;" text="&lt;" textFill="#fffbfb">
+         <font>
+            <Font name="System Bold" size="40.0" />
+         </font>
+      </Button>
+      <Button fx:id="right" layoutX="570.0" layoutY="356.0" mnemonicParsing="false" onAction="#mover" prefHeight="76.0" prefWidth="72.0" style="-fx-background-color: #516cb5;" text="&gt;" textFill="#fffbfb">
+         <font>
+            <Font name="System Bold" size="40.0" />
+         </font>
+      </Button>
+      <Button fx:id="back" layoutX="36.0" layoutY="27.0" mnemonicParsing="false" onAction="#back" style="-fx-background-color: #516cb5;" text="Back" textFill="#f8f6f6" />
+      <Button fx:id="logout" layoutX="562.0" layoutY="27.0" mnemonicParsing="false" onAction="#logout" style="-fx-background-color: #516cb5;" text="Logout" textFill="#f8f6f6" />
+   </children>
+</AnchorPane>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="117.0" prefWidth="424.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.TagController">
+   <children>
+      <ChoiceBox fx:id="choise1" layoutX="24.0" layoutY="31.0" prefHeight="26.0" prefWidth="117.0" />
+      <ChoiceBox fx:id="andor" layoutX="172.0" layoutY="64.0" prefHeight="26.0" prefWidth="81.0" />
+      <ChoiceBox fx:id="choise2" layoutX="285.0" layoutY="31.0" prefHeight="26.0" prefWidth="117.0" />
+      <TextField fx:id="tf1" layoutX="24.0" layoutY="77.0" prefHeight="26.0" prefWidth="117.0" />
+      <TextField fx:id="tf2" layoutX="285.0" layoutY="77.0" prefHeight="26.0" prefWidth="117.0" />
+   </children>
+</AnchorPane>
