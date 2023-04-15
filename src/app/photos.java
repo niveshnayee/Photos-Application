@@ -17,6 +17,12 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
+/**
+ * 
+ * @author niveshnayee
+ * @author mananpatel
+ *
+ */
 public class Photos extends Application {
 	@Override
 	public void start(Stage primaryStage) {
@@ -47,7 +53,10 @@ public class Photos extends Application {
 			
 		}
 	}
-	
+	/**
+	 * starts the main scene
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		launch(args);
 	}

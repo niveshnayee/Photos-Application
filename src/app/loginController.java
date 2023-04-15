@@ -32,6 +32,11 @@ public class loginController  {
     {
     	
     }
+    /**
+     * login event 
+     * @param event
+     * @throws IOException
+     */
     @FXML
     void login(ActionEvent event) throws IOException 
     {    	
@@ -47,7 +52,6 @@ public class loginController  {
     	else if(database.exists(uName.getText()))
     	{
     		
-//    		albumController.userName.setText(uName.getText());
     		
     		database.setUser(uName.getText());
     		FXMLLoader loader = new FXMLLoader();

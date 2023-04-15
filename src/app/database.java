@@ -25,6 +25,9 @@ public class database implements Serializable
 	private static ArrayList<User> usersList;
 	public static User userObj;
 	
+	/**
+	 * contructor for database saving and initialize the stock user 
+	 */
 	 private database()
 	 {
 		 usersList = new ArrayList<User>();
@@ -57,6 +60,10 @@ public class database implements Serializable
 		 usersList.add(Stock);
 	 }
 	 
+	 /**
+	  * gets the instance of the database, only have one object of this class
+	  * @return
+	  */
 	 public static database getInstance() 
 	 {
 		 if (db == null) {
@@ -65,6 +72,10 @@ public class database implements Serializable
 		 return db;
 	 }
 	 
+	 /**
+	  * return user array 
+	  * @return
+	  */
 	 public static ArrayList<User> users()
 	 {
 //		 database d = getInstance();
@@ -72,6 +83,11 @@ public class database implements Serializable
 		 return usersList;
 	 }
 	 
+	 
+	 /**
+	  * remove user
+	  * @param name
+	  */
 	 public static void removeUser(String name)
 	 {
 		 for(User user : usersList)
@@ -85,6 +101,11 @@ public class database implements Serializable
 		 
 	 }
 	 
+	 /**
+	  * add user
+	  * @param user
+	  */
+	 
 	 public static void addUser(User user)
 	 {
 		 
@@ -92,7 +113,10 @@ public class database implements Serializable
 		 usersList.add(user);
 	 }
 	 
-	 
+	 /**
+	  * 
+	  * @param name
+	  */
 	 public static void setUser(String name)
 	 {
 //		 database d = getInstance();
@@ -105,7 +129,11 @@ public class database implements Serializable
 	 }
 	 
 	 
-	 
+	/**
+	 *  check if the user is exists 
+	 * @param name
+	 * @return
+	 */
 	 public static boolean exists(String name)
 	 {
 //		 database d = getInstance();
@@ -119,26 +147,10 @@ public class database implements Serializable
 	 }
 	 
 	 
-//	 public static void addUser(User user)
-//	 {
-//		 db.usersList.add(user);
-//	 }
-//	 
-//	 public static User exists(String userName)
-//	 {
-//        for(User user : usersList){
-//            if(user.getName().equalsIgnoreCase(userName)){
-//                return user;
-//            }
-//        }
-//        return null;
-//    }
-//    
-//	 public static ArrayList<User> getUsersList()
-//	 {
-//        return usersList;
-//	 }
-	 
+/**
+ * writs in to ddata base
+ * @throws IOException
+ */
 	 
 	 public static void writeToDataBase() throws IOException
 	 {
@@ -149,6 +161,9 @@ public class database implements Serializable
 	 }
 	 
 	 
+	 /**
+	  * reads in to db
+	  */
 	@SuppressWarnings("unchecked")
 	public static void readFromDataBase()
 	 {

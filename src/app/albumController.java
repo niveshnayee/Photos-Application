@@ -5,6 +5,8 @@
 package app;
 
 import java.io.IOException;
+
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
@@ -53,7 +55,10 @@ public class albumController {
     
     
     
-    
+    /**
+     * intialize for album controller 
+     * @throws IOException
+     */
     public void initialize() throws IOException 
 	{
 //		System.out.println(database.users());
@@ -174,6 +179,10 @@ public class albumController {
 		
 	}
 
+    /**
+     * add method for adding new album
+     * @param event
+     */
     @FXML
     void add(ActionEvent event) 
     {
@@ -194,6 +203,11 @@ public class albumController {
         	}
     	}
     }
+    
+    /**
+     * delete event handler
+     * @param event
+     */
 
     @FXML
     void delete(ActionEvent event) 
@@ -218,6 +232,11 @@ public class albumController {
             }
         }
     }
+    
+    /**
+     * edit album name handler 
+     * @param event
+     */
 
     @FXML
     void edit(ActionEvent event) 
@@ -253,6 +272,11 @@ public class albumController {
     	
     }
 
+    /**
+     * log out handler 
+     * @param event
+     * @throws IOException
+     */
     @FXML
     void logout(ActionEvent event) throws IOException 
     {
@@ -264,6 +288,10 @@ public class albumController {
 		mainStage.show();
     }
 
+    /**
+     * search date button event 
+     * @param event
+     */
     @FXML
     void searchDate(ActionEvent event) 
     {
@@ -339,7 +367,11 @@ public class albumController {
     
     
 
-
+/**
+ * search by tag event 
+ * @param event
+ * @throws IOException
+ */
     @FXML
     void searchTag(ActionEvent event) throws IOException 
     {

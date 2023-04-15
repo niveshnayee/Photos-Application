@@ -22,8 +22,10 @@ public class User implements Serializable
 	
 	public HashMap<LocalDate,List<String>> dateSearch; 
 	
-	/*
-	 * 
+	/**
+	 * contructor
+	 * @param name
+	 * @param p
 	 */
 	public User(String name, ArrayList<album> p)
 	{
@@ -33,6 +35,11 @@ public class User implements Serializable
 		dateSearch = new HashMap<>();
 	}
 	
+	/**
+	 * gets the tag object from the path given
+	 * @param path
+	 * @return
+	 */
 	public Tags getTagFromPath(String path)
 	{
 		for(Tags t : tag)
@@ -43,6 +50,11 @@ public class User implements Serializable
 		return null;
 	}
 	
+	/**
+	 * check if caterogry contains in Tags 
+	 * @param name
+	 * @return
+	 */
 	public boolean containsCat(String name)
 	{
 		for(Tags t : tag)
@@ -53,6 +65,11 @@ public class User implements Serializable
 		return false;
 	}
 	
+	/**
+	 * check if value contains in Tags
+	 * @param name
+	 * @return
+	 */
 	public boolean containsVal(String name)
 	{
 		for(Tags t : tag)
@@ -68,6 +85,11 @@ public class User implements Serializable
 		return false;
 	}
 	
+	/**
+	 * check if name contains in Tags
+	 * @param name
+	 * @return
+	 */
 	
 	public boolean containsPath(String name)
 	{
@@ -80,6 +102,11 @@ public class User implements Serializable
 	}
 	
 	
+	/**
+	 * get the album from name 
+	 * @param name
+	 * @return
+	 */
 	public album getAlbum(String name)
 	{
 		for(album alb : albums)
@@ -92,7 +119,10 @@ public class User implements Serializable
 		return null;
 	}
 	
-	
+	/**
+	 * add album by given name for that
+	 * @param name
+	 */
 	public void addAlbum(String name)
 	{
 //		if (albums == null) {
@@ -102,6 +132,11 @@ public class User implements Serializable
 		albums.add(alb);
 	}
 	
+	/**
+	 * renames the album
+	 * @param old
+	 * @param rename
+	 */
 	public void renameAlbum(String old, String rename)
 	{
 		for(album alb : albums)
@@ -113,6 +148,11 @@ public class User implements Serializable
 		}
 	}
 	
+	
+	/**
+	 * removes the album  
+	 * @param name
+	 */
 	public void removeAlbum(String name)
 	{
 		for(album alb : albums)
@@ -125,13 +165,19 @@ public class User implements Serializable
 		}
 	}
 	
-	
+	/**
+	 * gets the name of user
+	 * @return
+	 */
 	public String getName()
 	{
 		return name;
 	}
 	
 	
-	
+	/**
+	 * set the name for user
+	 * @param name
+	 */
 	public void setName(String name){ this.name = name;}
 }

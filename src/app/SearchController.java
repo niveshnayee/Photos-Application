@@ -48,7 +48,9 @@ public class SearchController {
     private ListView<String> photoList;
     private ObservableList<String> data = FXCollections.observableArrayList();
     
-    
+    /** intialize befor scene 
+     * 
+     */
     public void initialize()
     {
     	if(fromD != null & toD != null)
@@ -125,7 +127,11 @@ public class SearchController {
         });
 
     }
-
+/**
+ * back button event
+ * @param event
+ * @throws IOException
+ */
     @FXML
     void back(ActionEvent event) throws IOException 
     {
@@ -137,6 +143,10 @@ public class SearchController {
 		mainStage.show();
     }
 
+    /**
+     * create album of search results 
+     * @param event
+     */
     @FXML
     void createAlbum(ActionEvent event) 
     {
@@ -196,6 +206,11 @@ public class SearchController {
     	}
     }
 
+    /**
+     * logout button event
+     * @param event
+     * @throws IOException
+     */
     @FXML
     void logout(ActionEvent event) throws IOException 
     {
@@ -207,7 +222,9 @@ public class SearchController {
 		mainStage.show();
     }
     
-    
+    /**
+     * check for the single search 
+     */
     private void singleSearch()
     {
     	for(Tags t: database.userObj.tag)
@@ -229,7 +246,9 @@ public class SearchController {
     	}
     }
     
-    
+    /*
+     * checks for and condition 
+     */
     private void andSearch()
     {
     	System.out.println("1");
@@ -251,6 +270,10 @@ public class SearchController {
     		}
     	}
     }
+    
+    /**
+     * checks for or condition 
+     */
     
     private void orSearch()
     {

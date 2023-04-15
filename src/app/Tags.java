@@ -15,6 +15,11 @@ public class Tags implements Serializable
 	public HashMap<String, List<String>> tags;
 	public ArrayList<String> photoPath;
 	
+	/**
+	 * constructor
+	 * @param hp
+	 * @param p
+	 */
 	public Tags(HashMap<String,List<String>> hp, ArrayList<String> p)
 	{
 		tags = hp;

@@ -39,7 +39,9 @@ public class slideshowController {
     private static int currentIndex = User.albumName.photos.indexOf(photolistController.picShow);
     public ArrayList<photoList> photos = User.albumName.photos;
     Image image;
-    
+   /**
+    * before scene intialize it 
+    */
     
     public void initialize()
     {
@@ -48,6 +50,12 @@ public class slideshowController {
         image = new Image("file:"+ photos.get(currentIndex).path);
         bigimage.setImage(image);
     }
+    
+    /**
+     * back event handler
+     * @param event
+     * @throws IOException
+     */
 
     @FXML
     void back(ActionEvent event) throws IOException 
@@ -60,6 +68,11 @@ public class slideshowController {
         mainStage.show();
     }
 
+    /**
+     * logout event 
+     * @param event
+     * @throws IOException
+     */
     @FXML
     void logout(ActionEvent event) throws IOException 
     {
@@ -70,6 +83,11 @@ public class slideshowController {
         mainStage.setScene(new Scene(root));
         mainStage.show();
     }
+    
+    /**
+     * moves left even
+     * @param event
+     */
     
     @FXML
     void movel(ActionEvent event) {
@@ -86,6 +104,10 @@ public class slideshowController {
         }
     }
 
+    /**
+     * slides right the pic
+     * @param event
+     */
     @FXML
     void mover(ActionEvent event) {
         if (currentIndex < photos.size() - 1) {

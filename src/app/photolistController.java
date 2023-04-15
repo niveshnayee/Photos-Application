@@ -89,6 +89,10 @@ public class photolistController {
     public static photoList picShow;
     private int selectedIndex = -1;
     
+    /**
+     * intialize method before scene 
+     * @throws MalformedURLException
+     */
     public void initialize() throws MalformedURLException {
         // Set the cell factory to display images in the list view
     	
@@ -142,17 +146,7 @@ public class photolistController {
     			}
     		}
     	}
-//    	if(database.userObj.containsPath(data.get(selectedIndex)))
-//		{
-//			Tags t = database.userObj.getTagFromPath(data.get(selectedIndex));
-//			
-//			for (Map.Entry<String, String> entry : t.tags.entrySet()) {
-//			    String key = entry.getKey();
-//			    String value = entry.getValue();
-//			    String keyValueString = key + ": " + value;
-//			    tagData.add(keyValueString);
-//			}
-//		}
+
     	
     	picView.setItems(data);
 		picView.requestFocus();
@@ -242,6 +236,11 @@ public class photolistController {
         });
     }
 
+    /**
+     * add picture method event 
+     * @param event
+     * @throws MalformedURLException
+     */
     @FXML
     void addPic(ActionEvent event) throws MalformedURLException {
     	
@@ -266,9 +265,7 @@ public class photolistController {
         	dialog.setHeaderText("Enter your Caption:");
         	dialog.setContentText("Caption:");
 
-//        	final Optional<ButtonType> result = alert.showAndWait();
-//        	selectedIndex = picView.getSelectionModel().getSelectedIndex();
-//    		photoList photo = User.albumName.photos.get(selectedIndex);
+
 			LocalDateTime currentDateTime = LocalDateTime.now();
 			
 			if(database.userObj.dateSearch == null)
@@ -315,11 +312,15 @@ public class photolistController {
             data.add(file.getPath());
         }
     }
+    
+    /**
+     * add tag eveent 
+     * @param event
+     */
 
     @FXML
     void addTag(ActionEvent event) 
     {
-    	// need to check if user put nothing in value and cat selection box 
     	HashMap<String, List<String>> pair = new HashMap<>();
     	
     	selectedIndex = picView.getSelectionModel().getSelectedIndex();
@@ -337,15 +338,12 @@ public class photolistController {
     	
     	if(!database.userObj.containsPath(data.get(selectedIndex)))
     	{
-    		//Tags t = database.userObj.getTagFromPath(data.get(selectedIndex));
-    		//System.out.println("hi");
+    		
     		
     		database.userObj.tag.add(new Tags(pair, path));
-//    		String tagFormatted = categoryDrag.getSelectionModel().getSelectedItem() + ": " + catValue.getText();
-//    		tagData.add(tagFormatted);
+
     		
     		catValue.clear();
-    		//categoryDrag.clearSelection();
     	}else
     	{
     		for(Tags t : database.userObj.tag)
@@ -369,6 +367,7 @@ public class photolistController {
     	        true, true, true, true, true, true, null));
     }
 
+    
     @FXML
     void back(ActionEvent event) throws IOException 
     {
@@ -525,6 +524,10 @@ public class photolistController {
     	}
     }
     
+    /**
+     * adds the category user gives
+     * @param event
+     */
     @FXML
     void addCategory(ActionEvent event) 
     {
@@ -542,6 +545,10 @@ public class photolistController {
     }
     
 
+    /**
+     * removes the tag 
+     * @param event
+     */
     @FXML
     void removeTag(ActionEvent event) 
     {
@@ -578,6 +585,12 @@ public class photolistController {
         	
     	}
     }
+    
+    /**
+     * redirects to slideShow scene
+     * @param event
+     * @throws IOException
+     */
 
     @FXML
     void slideShow(ActionEvent event) throws IOException 

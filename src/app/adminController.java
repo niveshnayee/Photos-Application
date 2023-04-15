@@ -50,6 +50,10 @@ public class adminController implements Initializable {
     
     private int selectedIndex = -1;
 
+    /**
+     * method for add users 
+     * @param event
+     */
     @FXML
     void add(ActionEvent event) 
     {
@@ -67,6 +71,10 @@ public class adminController implements Initializable {
         user.clear();
     }
 
+    /**
+     * deletion of users 
+     * @param event
+     */
     @FXML
     void delete(ActionEvent event) 
     {
@@ -91,7 +99,13 @@ public class adminController implements Initializable {
         }
         
     }
-
+    
+    
+/**
+ * logout event handler 
+ * @param event
+ * @throws IOException
+ */
     @FXML
     void logout(ActionEvent event) throws IOException
     {
@@ -102,12 +116,17 @@ public class adminController implements Initializable {
 		mainStage.setScene(new Scene(root));
 		mainStage.show();
     }
-
+/**
+ * 
+ */
 	public static void start() {
 		// TODO Auto-generated method stub
 		
 	}
 
+	/**
+	 * intialize for admincontroller  before the scene
+	 */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) 
 	{
