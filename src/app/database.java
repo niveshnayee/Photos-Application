@@ -1,3 +1,7 @@
+/**
+ * @author Nivesh Nayee 
+ * @author Manan Patel
+ */
 package app;
 
 import java.io.File;
@@ -7,7 +11,11 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 
 public class database implements Serializable 
 {
@@ -20,7 +28,31 @@ public class database implements Serializable
 	 private database()
 	 {
 		 usersList = new ArrayList<User>();
-		 User Stock = new User("stock", new ArrayList<album>());
+		 User Stock = new User("Stock", new ArrayList<album>());
+		 album alb = new album("stocks", new ArrayList<photoList>());
+		 Stock.albums.add(alb);
+		 
+		 LocalDateTime currentDateTime = LocalDateTime.now();
+		 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm");
+         String formattedDateTime = currentDateTime.format(formatter);
+		 alb.photos.add(new photoList( "data/second.jpeg", "none", formattedDateTime));
+		 alb.photos.add(new photoList( "data/camel.jpeg", "none", formattedDateTime));
+		 alb.photos.add(new photoList( "data/fifth.jpeg", "none", formattedDateTime));
+		 alb.photos.add(new photoList( "data/image5.jpeg", "none", formattedDateTime));
+		 alb.photos.add(new photoList( "data/newpic.jpeg", "none", formattedDateTime));
+		 
+		 List<String> path = new ArrayList<>();
+		 
+		 path.add("data/second.jpeg");
+		 path.add("data/camel.jpeg");
+		 path.add("data/fifth.jpeg");
+		 path.add("data/image5.jpeg");
+		 path.add("data/newpic.jpeg");
+		 
+		 Stock.dateSearch.put(LocalDate.now(), path);
+
+		 alb.old = LocalDate.now();
+
 //		 Stock.setName("stock");
 		 usersList.add(Stock);
 	 }
@@ -110,7 +142,7 @@ public class database implements Serializable
 	 
 	 public static void writeToDataBase() throws IOException
 	 {
-        FileOutputStream fileOutputStream = new FileOutputStream("src/data.dat");
+        FileOutputStream fileOutputStream = new FileOutputStream("data/data.dat");
         ObjectOutputStream outputStream = new ObjectOutputStream(fileOutputStream);
         outputStream.writeObject(db.usersList);
         outputStream.close();
@@ -121,7 +153,7 @@ public class database implements Serializable
 	public static void readFromDataBase()
 	 {
 		database d = getInstance();
-		File f = new File("src/data.dat");
+		File f = new File("data/data.dat");
         try
         {
         	if(f.length() == 0)

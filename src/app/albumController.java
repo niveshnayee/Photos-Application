@@ -1,3 +1,7 @@
+/**
+ * @author Nivesh Nayee 
+ * @author Manan Patel
+ */
 package app;
 
 import java.io.IOException;
@@ -10,19 +14,17 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -124,7 +126,7 @@ public class albumController {
                         		  image = new Image("file:" + path);
                         	  }
                         	  else
-                        		  image = new Image("file:/Users/niveshnayee/Desktop/No-Image-Found-400x264.png");
+                        		  image = new Image("file:data/noImage.jpeg");
                               ImageView imageView = new ImageView();
                               Label album = new Label(item);
                               
@@ -196,18 +198,25 @@ public class albumController {
     @FXML
     void delete(ActionEvent event) 
     {
-    	selectedIndex = albums.getSelectionModel().getSelectedIndex();
-    	if(selectedIndex == 0 && data.size() < 0)
-    		selectedIndex = -1;
     	
-    	if(selectedIndex > -1)
-    	{
-    		selectedIndex = albums.getSelectionModel().getSelectedIndex();
-        	database.userObj.albums.remove(selectedIndex);
-        	//removeAlbum(data.get(selectedIndex));
-        	
-        	data.remove(selectedIndex);
-    	}
+    	selectedIndex = albums.getSelectionModel().getSelectedIndex();
+        if (selectedIndex == 0 && data.size() < 0)
+            selectedIndex = -1;
+
+        if (selectedIndex > -1) {
+            selectedIndex = albums.getSelectionModel().getSelectedIndex();
+
+            Alert alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("Confirmation");
+            alert.setHeaderText("Delete Album");
+            alert.setContentText("Are you sure you want to delete the selected album?");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                database.userObj.albums.remove(selectedIndex);
+                data.remove(selectedIndex);
+            }
+        }
     }
 
     @FXML
@@ -389,7 +398,7 @@ public class albumController {
             	{
             		SearchController.cat1 = category1.getSelectionModel().getSelectedItem();
             		SearchController.val1 = value1.getText();
-            		
+            		System.out.println(AndOr.getSelectionModel().getSelectedItem());
             		SearchController.opt = AndOr.getSelectionModel().getSelectedItem();
             		
             		SearchController.cat2 = category2.getSelectionModel().getSelectedItem();

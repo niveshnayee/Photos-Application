@@ -1,3 +1,7 @@
+/**
+ * @author Nivesh Nayee 
+ * @author Manan Patel
+ */
 package app;
 
 import java.io.IOException;
@@ -8,6 +12,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -52,6 +58,12 @@ public class loginController  {
     		mainStage.show();
     	}else	
     	{
+    		Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Invalid Username");
+            alert.setContentText("The username you entered does not exist.");
+            alert.showAndWait();
+            
     		uName.clear();
     		uName.requestFocus();
     		uName.positionCaret(0);

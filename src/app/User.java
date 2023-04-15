@@ -1,10 +1,15 @@
+/**
+ * @author Nivesh Nayee 
+ * @author Manan Patel
+ */
 package app;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
 
 public class User implements Serializable 
 {
@@ -15,8 +20,11 @@ public class User implements Serializable
 	public  ArrayList<Tags> tag;
 	public ArrayList<album> albums;
 	
-	public HashMap<LocalDate,String> dateSearch; 
+	public HashMap<LocalDate,List<String>> dateSearch; 
 	
+	/*
+	 * 
+	 */
 	public User(String name, ArrayList<album> p)
 	{
 		this.name = name;
@@ -49,8 +57,13 @@ public class User implements Serializable
 	{
 		for(Tags t : tag)
 		{
-			if(t.tags.containsValue(name))
-				return true;
+			for(List<String> value : t.tags.values())
+			{
+				if(value.contains(name))
+				{
+					return true;
+				}
+			}
 		}
 		return false;
 	}

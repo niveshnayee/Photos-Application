@@ -1,9 +1,15 @@
+/**
+ * @author Nivesh Nayee 
+ * @author Manan Patel
+ */
+
 package app;
 
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
@@ -14,7 +20,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -61,21 +70,25 @@ public class adminController implements Initializable {
     @FXML
     void delete(ActionEvent event) 
     {
-    	
     	selectedIndex = userList.getSelectionModel().getSelectedIndex();
-    	if(selectedIndex == 0 && data.size() < 0)
-    		selectedIndex = -1;
-    	
-    	if(selectedIndex > -1)
-    	{
-    		selectedIndex = userList.getSelectionModel().getSelectedIndex();
-        	
-    		
-    		database.removeUser(data.get(selectedIndex));
-        	//removeAlbum(data.get(selectedIndex));
-        	
-        	data.remove(selectedIndex);
-    	}
+        if (selectedIndex == 0 && data.size() < 0)
+            selectedIndex = -1;
+
+        if (selectedIndex > -1) {
+            selectedIndex = userList.getSelectionModel().getSelectedIndex();
+
+            Alert alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("Confirmation");
+            alert.setHeaderText("Delete User");
+            alert.setContentText("Are you sure you want to delete the selected user?");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                database.removeUser(data.get(selectedIndex));
+                //removeAlbum(data.get(selectedIndex));
+                data.remove(selectedIndex);
+            }
+        }
         
     }
 

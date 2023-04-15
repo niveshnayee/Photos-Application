@@ -1,3 +1,7 @@
+/**
+ * @author Nivesh Nayee 
+ * @author Manan Patel
+ */
 package app;
 
 
@@ -20,7 +24,7 @@ public class Photos extends Application {
 			database.readFromDataBase();
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(getClass().getResource("home.fxml"));
-			primaryStage.setTitle("SongLib");
+			primaryStage.setTitle("PhotoApp");
 			primaryStage.setResizable(false);
 			AnchorPane root = (AnchorPane)loader.load();
 			loginController listController = loader.getController();

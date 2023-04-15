@@ -1,3 +1,7 @@
+/**
+ * @author Nivesh Nayee 
+ * @author Manan Patel
+ */
 package app;
 
 import java.io.File;
@@ -8,6 +12,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -119,15 +124,20 @@ public class photolistController {
     		{
     			if(database.userObj.containsPath(pic.path))
     			{
-    				System.out.println("hi");
+    				//System.out.println("hi");
     				Tags t = database.userObj.getTagFromPath(pic.path);
     				
-    				for (Map.Entry<String, String> entry : t.tags.entrySet()) 
+    				for (Map.Entry<String, List<String>> entry : t.tags.entrySet()) 
     				{
     				    String key = entry.getKey();
-    				    String value = entry.getValue();
-    				    String keyValueString = key + ": " + value;
-    				    tagData.add(keyValueString);
+    				    List<String> values = entry.getValue();
+    				    for(String v : values)
+    				    {
+    				    	String keyValueString = key + ": " + v;
+    				    	tagData.add(keyValueString);
+    				    }
+    				    
+    				    
     				}
     			}
     		}
@@ -207,13 +217,18 @@ public class photolistController {
 					
     				Tags t = database.userObj.getTagFromPath(data.get(selectedIndex));
     				
-    				for (Map.Entry<String, String> entry : t.tags.entrySet()) 
+    				for (Map.Entry<String, List<String>> entry : t.tags.entrySet()) 
     				{
     				    String key = entry.getKey();
-    				    String value = entry.getValue();
-    				    String keyValueString = key + ": " + value;
-    				    if(!tagData.contains(keyValueString))
-    				    	tagData.add(keyValueString);
+    				    List<String> values = entry.getValue();
+    				    for(String v : values)
+    				    {
+    				    	String keyValueString = key + ": " + v;
+    				    	
+    				    	if(!tagData.contains(keyValueString))
+        				    	tagData.add(keyValueString);
+    				    }
+    				    
     				}
     			}else
     				tagData.clear();
@@ -269,28 +284,27 @@ public class photolistController {
 			{
 				User.albumName.latest = currDate;
 			}
-			
-			
-			
-//			if(User.albumName.oldDate == null || currentDateTime.isBefore(User.albumName.oldDate))
-//			{
-//				User.albumName.oldDate = currentDateTime;
-//			}
-//			
-//			if(User.albumName.newDate == null || currentDateTime.isAfter(User.albumName.newDate))
-//			{
-//				User.albumName.newDate = currentDateTime;
-//			}
             
             // Format the date and time
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm");
             String formattedDateTime = currentDateTime.format(formatter);
             
-            database.userObj.dateSearch.put(currDate, file.getPath());
-//            if(Integer.parseInt(formattedDateTime.substring(6)) > Integer.parseInt(oldDate.substring(6)))
-//            {
-//            	
-//            }
+            
+            if(database.userObj.dateSearch.containsKey(currDate))
+            {
+            	List<String> paths = database.userObj.dateSearch.get(currDate);
+            	paths.add(file.getPath());
+            	database.userObj.dateSearch.put(currDate, paths);
+            }
+            else
+            {
+            	List<String> path = new ArrayList<>();
+            	path.add(file.getPath());
+            	database.userObj.dateSearch.put(currDate, path);
+            	
+            }
+            
+
             
         	Optional<String> result = dialog.showAndWait();
         	if (result.isPresent() && result.get() != "")
@@ -306,20 +320,26 @@ public class photolistController {
     void addTag(ActionEvent event) 
     {
     	// need to check if user put nothing in value and cat selection box 
-    	HashMap<String, String> pair = new HashMap<>();
+    	HashMap<String, List<String>> pair = new HashMap<>();
     	
     	selectedIndex = picView.getSelectionModel().getSelectedIndex();
     	String c = categoryDrag.getSelectionModel().getSelectedItem();
-    	pair.put(c, catValue.getText());
+    	
+    	List<String> values = new ArrayList<>();
+		values.add(catValue.getText());
+		
+    	pair.put(c, values);
     	
     	
     	ArrayList<String> path = new ArrayList<>();
+    	
     	path.add(data.get(selectedIndex));
     	
     	if(!database.userObj.containsPath(data.get(selectedIndex)))
     	{
     		//Tags t = database.userObj.getTagFromPath(data.get(selectedIndex));
     		//System.out.println("hi");
+    		
     		database.userObj.tag.add(new Tags(pair, path));
 //    		String tagFormatted = categoryDrag.getSelectionModel().getSelectedItem() + ": " + catValue.getText();
 //    		tagData.add(tagFormatted);
@@ -332,7 +352,9 @@ public class photolistController {
 			{
 				if(t.photoPath.contains(data.get(selectedIndex)))
 				{
-					t.tags.put(c, catValue.getText());
+					List<String> value = t.tags.get(c);
+					value.add(catValue.getText());
+					t.tags.put(c,value);
 					    picView.fireEvent(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0,
 		            	        0, 0, 0, MouseButton.PRIMARY, 1, true, true, true, true,
 		            	        true, true, true, true, true, true, null));

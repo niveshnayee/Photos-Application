@@ -1,8 +1,13 @@
+/**
+ * @author Nivesh Nayee 
+ * @author Manan Patel
+ */
 package app;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -48,21 +53,32 @@ public class SearchController {
     {
     	if(fromD != null & toD != null)
     	{
-    		for (Map.Entry<LocalDate, String> entry : database.userObj.dateSearch.entrySet()) 
+    		//System.out.println(database.userObj.dateSearch.size());
+    		for (Map.Entry<LocalDate, List<String>> entry : database.userObj.dateSearch.entrySet()) 
         	{
-        		String value = entry.getValue();
-        		if( entry.getKey().isBefore(toD) && entry.getKey().isAfter(fromD))
+			    List<String> values = entry.getValue();
+        		for(String p: values)
         		{
-        			data.add(value);
+        			if( entry.getKey().isBefore(toD) && entry.getKey().isAfter(fromD))
+            		{
+            			//System.out.println("1");
+            			data.add(p);
+            		}
         		}
+        		//System.out.println("1");
+        		
             }
     	}
     	else
     	{
     		if(opt == null && opt == "")
+    		{
     			singleSearch();
-    		else if(opt.equals("And"))
+    		}
+    		else if(opt.equals("AND"))
+    		{
     			andSearch();
+    		}	
     		else
     			orSearch();
     	}
@@ -196,12 +212,19 @@ public class SearchController {
     {
     	for(Tags t: database.userObj.tag)
     	{
-    		if(t.tags.containsKey(cat1) && t.tags.containsValue(val1))
+    		if(t.tags.containsKey(cat1))
     		{
-    			for(String p : t.photoPath)
+    			for(List<String> value : t.tags.values())
     			{
-    				data.add(p);
+    				if(value.contains(val1))
+    				{
+    					for(String p : t.photoPath)
+    	    			{
+    	    				data.add(p);
+    	    			}
+    				}
     			}
+    			
     		}
     	}
     }
@@ -209,14 +232,21 @@ public class SearchController {
     
     private void andSearch()
     {
+    	System.out.println("1");
     	for(Tags t: database.userObj.tag)
     	{
-    		if(t.tags.containsKey(cat1) && t.tags.containsValue(val1)  && t.tags.containsKey(cat2) && t.tags.containsValue(val2))
+    		if(t.tags.containsKey(cat1)  && t.tags.containsKey(cat2))
     		{
-    			for(String p : t.photoPath)
+    			for(List<String> value : t.tags.values())
     			{
-    				
-    				data.add(p);
+    				if(value.contains(val1) && value.contains(val2))
+    				{
+    					System.out.println("2");
+    					for(String p : t.photoPath)
+    	    			{
+    	    				data.add(p);
+    	    			}
+    				}
     			}
     		}
     	}
@@ -226,11 +256,17 @@ public class SearchController {
     {
     	for(Tags t: database.userObj.tag)
     	{
-    		if(  (t.tags.containsKey(cat1) && t.tags.containsValue(val1) ) || (t.tags.containsKey(cat2) && t.tags.containsValue(val2)) )
+    		if(  t.tags.containsKey(cat1)  || t.tags.containsKey(cat2))
     		{
-    			for(String p : t.photoPath)
+    			for(List<String> value : t.tags.values())
     			{
-    				data.add(p);
+    				if(value.contains(val1) || value.contains(val2))
+    				{
+    					for(String p : t.photoPath)
+    	    			{
+    	    				data.add(p);
+    	    			}
+    				}
     			}
     		}
     	}
