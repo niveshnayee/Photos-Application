@@ -570,7 +570,7 @@ public class photolistController {
     					String k = parts[0];
     					String v = parts[1];
     					
-    					if (t.tags.containsKey(k) && t.tags.get(k).equals(v)) {
+    					if (t.tags.containsKey(k) && t.tags.get(k).stream().anyMatch(tagValue -> tagValue.replace(" ", "").equals(v))) {
     					    t.tags.remove(k);
     					    if(t.tags.size() == 0)
     					    	t.photoPath.remove(data.get(selectedIndex));
